@@ -20,17 +20,26 @@ public class DriveSubsystem extends SubsystemBase {
 
   private final Supplier<Boolean> focButton;
 
+  private final Supplier<Boolean> focResetButton;
+
   private final Supplier<Rotation2d> magnetometer;
 
+  private Rotation2d focAbsoluteCorrection;
+
   /** Creates a new ExampleSubsystem. */
-  public DriveSubsystem(Supplier<Boolean> focButton, Supplier<Rotation2d> magnetometer) {
+  public DriveSubsystem(Supplier<Boolean> focButton, Supplier<Boolean> focResetButton, Supplier<Rotation2d> magnetometer) {
     this.focButton = focButton;
+    this.focResetButton = focResetButton;
     this.magnetometer = magnetometer;
+    this.focAbsoluteCorrection = new Rotation2d();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (this.focResetButton.get()) {
+      this.focAbsoluteCorrection = this.magnetometer.get();
+    }
   }
 
   @Override
@@ -61,7 +70,9 @@ public class DriveSubsystem extends SubsystemBase {
     for (int i = 0; i < newStates.length; i++) {
       newStates[i] = new SwerveModuleState(
         moduleStates[i].speedMetersPerSecond,
-        moduleStates[i].angle.minus(thetaOffset)
+        moduleStates[i].angle.minus(
+          thetaOffset.plus(this.focAbsoluteCorrection)
+        )
       );
     }
     this.setModuleStatesNormal(newStates);
