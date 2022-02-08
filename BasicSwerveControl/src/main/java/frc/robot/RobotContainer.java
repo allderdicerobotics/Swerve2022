@@ -39,9 +39,10 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     JoystickButton focButton = new JoystickButton(this.driver, Constants.FOC_BUTTON);
+    JoystickButton focResetButton = new JoystickButton(this.driver, Constants.FOC_RESET_BUTTON);
     this.drive = new DriveSubsystem(
       ( () -> focButton.get() ),
-      ( () -> TODO ),
+      ( () -> focResetButton.get() ),
       ( () -> navxSub.getMagnetometer() )
     );
 

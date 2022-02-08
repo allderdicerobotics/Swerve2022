@@ -23,4 +23,6 @@ public final class Constants {
 
     public static final int FOC_BUTTON = 3;
 
+    public static final int FOC_RESET_BUTTON = 8;
+
 }
