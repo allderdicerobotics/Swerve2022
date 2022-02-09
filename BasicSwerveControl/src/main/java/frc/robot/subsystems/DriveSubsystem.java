@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 import frc.robot.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
-  private static final SwerveDriveKinematics kinematics_obj = new SwerveDriveKinematics(
+  public static final SwerveDriveKinematics kinematics_obj = new SwerveDriveKinematics(
     DriveConstants.MODULE_POS_F_LEFT, DriveConstants.MODULE_POS_F_RIGHT,
     DriveConstants.MODULE_POS_B_LEFT, DriveConstants.MODULE_POS_B_RIGHT
   );

@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -14,6 +17,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.InputSubsystem;
 import frc.robot.subsystems.NavxSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -35,6 +39,10 @@ public class RobotContainer {
   private final NavxSubsystem navxSub = new NavxSubsystem();
   
   private final InputSubsystem input = new InputSubsystem(driver);
+
+  private static final PIDController xController = null;
+  private static final PIDController yController = null;
+  private static final ProfiledPIDController thetaController = null;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -69,5 +77,18 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return m_autoCommand;
+  }
+
+  public Command swerveFollow(Trajectory trajectory) {
+    return new SwerveControllerCommand(
+      trajectory,
+      ( () -> this.navxSub.getPose2d() ),
+      DriveSubsystem.kinematics_obj,
+      RobotContainer.xController,
+      RobotContainer.yController,
+      RobotContainer.thetaController,
+      ( (moduleStates) -> this.drive.setModuleStates(moduleStates) ),
+      this.navxSub, this.drive
+    );
   }
 }
